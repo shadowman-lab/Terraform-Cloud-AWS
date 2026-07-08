@@ -98,4 +98,24 @@ resource "aws_instance" "terraformvms" {
       operating_system: var.rhel_version
       usage: "shadowmandemos"
       }
+  lifecycle {
+    action_trigger {
+      events = [after_create]
+      actions = [action.aap_workflow_job_launch.aftercreate[count.index]]
+    }
+  }
+}
+
+action "aap_workflow_job_launch" "aftercreate" {
+  count                 = var.number_of_instances
+  config {
+    workflow_job_template_id     = 1279
+    wait_for_completion = true
+    wait_for_completion_timeout_seconds = 1200
+    extra_vars          = jsonencode({
+      vm_name           = aws_instance.terraformvms[count.index].tags.Name
+      ticket_number     = var.ticket_number
+      shadowman_provision_hypervisor = "AWS"
+    })
+  }
 }
