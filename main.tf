@@ -93,10 +93,10 @@ resource "aws_instance" "terraformvms" {
   key_name = "Shadowmankey"
   tags = {
       Name = "${var.instance_name_convention}${count.index}.shadowman.dev"
-      owner: "adworjan"
-      env: "dev"
-      operating_system: var.rhel_version
-      usage: "shadowmandemos"
+      owner = "adworjan"
+      env = "dev"
+      operating_system = var.rhel_version
+      usage = "shadowmandemos"
       }
   lifecycle {
     action_trigger {
